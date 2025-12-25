@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedConnect - Doctor Appointment Booking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #2a7de1;
+            --secondary: #e1f1ff;
+            --accent: #ff6b6b;
+            --dark: #2d3436;
+            --light: #f8f9fa;
+            --success: #2ecc71;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .logo i {
+            color: var(--accent);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1c68cd;
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--secondary) 0%, #ffffff 100%);
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        .hero p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            color: #636e72;
+        }
+        
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 18px 25px;
+            border-radius: 50px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .search-box button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            padding: 13px 25px;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-title h2 {
+            font-size: 36px;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+        
+        .section-title p {
+            color: #636e72;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: var(--light);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--primary);
+            font-size: 28px;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        /* ====== BOOK NOW BUTTON SECTION ====== */
+        .book-now-section {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .book-now-btn {
+            background: linear-gradient(135deg, #2c7be5, #00d97e);
+            color: white;
+            padding: 1rem 2.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            border-radius: 50px;
+            box-shadow: 0 6px 15px rgba(44, 123, 229, 0.3);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .book-now-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(44, 123, 229, 0.4);
+        }
+        
+        /* Doctors Section */
+        .doctors {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+        
+        .doctors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .doctor-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+
+        
+        .doctor-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .doctor-img {
+            height: 250px;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 24px;
+        }
+        
+        .doctor-info {
+            padding: 20px;
+        }
+        
+        .doctor-info h3 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .doctor-specialty {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .doctor-availability {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        /* Booking Steps */
+        .booking-steps {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .step {
+            text-align: center;
+            position: relative;
+            flex: 1;
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+        
+        .step:not(:last-child):after {
+            content: '';
+            position: absolute;
+            top: 25px;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background: #ddd;
+            z-index: -1;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: #dfe6e9;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: var(--primary);
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+        
+        .social-icons a:hover {
+            background: var(--primary);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav ul {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .steps {
+                flex-direction: column;
+                gap: 40px;
+            }
+            
+            .step:not(:last-child):after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>MedConnect</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="/doctors">Doctors</a></li>
+                        <li><a href="/bookings">My Bookings</a></li>
+                        <li><a href="/specialties">Specialties</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">About Us</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Find & Book Appointments with Ease</h1>
+            <p>Connect with healthcare professionals, choose your preferred time, and manage your health conveniently</p>
+            <div class="search-box">
+                <input type="text" placeholder="Search for doctors, specialties, or conditions...">
+                <button class="btn btn-primary">Search</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>How It Works</h2>
+                <p>Booking an appointment has never been easier. Follow these simple steps to see a doctor at your convenience.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Find a Doctor</h3>
+                    <p>Search by specialty, location, or doctor's name to find the right healthcare professional for your needs.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="far fa-calendar-check"></i>
+                    </div>
+                    <h3>Book an Appointment</h3>
+                    <p>View real-time availability and choose a time slot that works best for your schedule.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h3>Visit the Doctor</h3>
+                    <p>Receive confirmation and reminders for your appointment. Meet your doctor and get the care you need.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+      <!-- Book Now Button Section -->
+    <div class="book-now-section">
+        <button class="book-now-btn" id="book-now-btn" onclick="window.location.href='/doctors'" >
+            <i class="fas fa-calendar-check"></i>
+                Book Now
+        </button>
+    </div>
+
+    <!-- Doctors Section -->
+    <section class="doctors">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Featured Doctors</h2>
+                <p>Highly qualified professionals dedicated to providing the best healthcare experience.</p>
+            </div>
+            <div class="doctors-grid">
+                <div class="doctor-card">
+                    <div class="doctor-img">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <div class="doctor-info">
+                        <h3>Dr. Sarah Johnson</h3>
+                        <p class="doctor-specialty">Cardiologist</p>
+                        <p>10+ years of experience specializing in heart health and cardiovascular diseases.</p>
+                        <div class="doctor-availability">
+                            <span>Available Today</span>
+                            <button class="btn btn-primary">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="doctor-card">
+                    <div class="doctor-img">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <div class="doctor-info">
+                        <h3>Dr. Michael Chen</h3>
+                        <p class="doctor-specialty">Pediatrician</p>
+                        <p>Specializing in child healthcare and development with a gentle, caring approach.</p>
+                        <div class="doctor-availability">
+                            <span>Available Tomorrow</span>
+                            <button class="btn btn-primary">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="doctor-card">
+                    <div class="doctor-img">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <div class="doctor-info">
+                        <h3>Dr. Emily Rodriguez</h3>
+                        <p class="doctor-specialty">Dermatologist</p>
+                        <p>Expert in skin health and beauty treatments with a focus on patient education.</p>
+                        <div class="doctor-availability">
+                            <span>Available Fri</span>
+                            <button class="btn btn-primary">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+  
+
+
+    <!-- Booking Steps -->
+    <section class="booking-steps">
+        <div class="container">
+            <div class="section-title">
+                <h2>Simple Booking Process</h2>
+                <p>Book your appointment in just a few clicks</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Search Doctor</h3>
+                    <p>Find a specialist by name, specialty, or availability</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Select Time Slot</h3>
+                    <p>Choose from available time slots that work for you</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Confirm Booking</h3>
+                    <p>Provide basic information and confirm your appointment</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>MedConnect</h3>
+                    <p>Making healthcare accessible and convenient for everyone through technology.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Find a Doctor</a></li>
+                        <li><a href="#">Specialties</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Specialties</h3>
+                    <ul>
+                        <li><a href="#">Cardiology</a></li>
+                        <li><a href="#">Dermatology</a></li>
+                        <li><a href="#">Pediatrics</a></li>
+                        <li><a href="#">Neurology</a></li>
+                        <li><a href="#">Orthopedics</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Health Ave, Medical Center</li>
+                        <li><i class="fas fa-phone"></i> (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@medconnect.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 MedConnect. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple interactive functionality for demonstration
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click event to all "Book Now" buttons
+            const bookButtons = document.querySelectorAll('.doctor-availability .btn');
+            bookButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('Booking functionality would open here. In a real application, this would show available time slots and a booking form.');
+                });
+            });
+            
+            // Search functionality
+            const searchButton = document.querySelector('.search-box button');
+            searchButton.addEventListener('click', function() {
+                const searchInput = document.querySelector('.search-box input');
+                if (searchInput.value.trim() === '') {
+                    alert('Please enter a search term (doctor name, specialty, or condition)');
+                } else {
+                    alert('Searching for: ' + searchInput.value + '\nIn a real application, this would show search results.');
+                }
+            });
+        });
+        document.getElementById('book-now-btn').addEventListener('click', function() {
+            window.location.href = '/doctors';
+        });
+    </script>
+</body>
+</html>

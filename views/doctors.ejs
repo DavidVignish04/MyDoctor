@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Doctors - MedConnect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #2a7de1;
+            --primary-dark: #1c68cd;
+            --primary-light: #e1f1ff;
+            --secondary: #e1f1ff;
+            --accent: #ff6b6b;
+            --accent-light: #ffd8d8;
+            --dark: #2d3436;
+            --dark-light: #636e72;
+            --light: #f8f9fa;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --gray: #dfe6e9;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --radius: 15px;
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .logo i {
+            color: var(--accent);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        nav a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary);
+            transition: var(--transition);
+        }
+        
+        nav a:hover, nav a.active {
+            color: var(--primary);
+        }
+        
+        nav a:hover:after, nav a.active:after {
+            width: 100%;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-light) 0%, #ffffff 100%);
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-header:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%232a7de1' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+        
+        .page-header h1 {
+            font-size: 42px;
+            color: var(--dark);
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .page-header p {
+            font-size: 18px;
+            color: var(--dark-light);
+            max-width: 600px;
+            margin: 0 auto 25px;
+            position: relative;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 10px;
+            position: relative;
+        }
+        
+        .breadcrumb li {
+            display: flex;
+            align-items: center;
+        }
+        
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .breadcrumb a:hover {
+            color: var(--primary-dark);
+        }
+        
+        .breadcrumb i {
+            margin: 0 10px;
+            font-size: 12px;
+            color: var(--dark-light);
+        }
+        
+        /* Sort Options */
+        .sort-options {
+            display: flex;
+            justify-content: flex-end;
+            margin: 30px 0 20px;
+        }
+        
+        .sort-select {
+            padding: 12px 15px;
+            border: 1px solid var(--gray);
+            border-radius: var(--radius);
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .sort-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(42, 125, 225, 0.2);
+        }
+        
+        /* Filters Section */
+        .filters {
+            background: white;
+            padding: 30px;
+            margin: 20px 0 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .filters:hover {
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .filter-group select, .filter-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--gray);
+            border-radius: var(--radius);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        
+        .filter-group select:focus, .filter-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(42, 125, 225, 0.2);
+        }
+        
+        /* Doctors Grid */
+        .doctors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+            justify-items: center;
+        }
+        
+        .doctor-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            width: 100%;
+            max-width: 350px;
+        }
+        
+        .doctor-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .doctor-img {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .doctor-img:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(42, 125, 225, 0.1) 0%, rgba(225, 241, 255, 0.3) 100%);
+        }
+        
+        .availability-status {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 2;
+        }
+        
+        .status-available {
+            background: var(--success);
+            color: white;
+        }
+        
+        .status-limited {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .doctor-info {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .doctor-info h3 {
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+        
+        .doctor-specialty {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .doctor-rating {
+            color: var(--warning);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .working-hours {
+            margin: 15px 0;
+            flex-grow: 1;
+        }
+        
+        .working-hours h4 {
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .hours-list {
+            list-style: none;
+        }
+        
+        .hours-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--gray);
+        }
+        
+        .hours-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .day {
+            color: var(--dark-light);
+        }
+        
+        .time {
+            font-weight: 500;
+        }
+        
+        .doctor-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 40px;
+            font-size: 18px;
+            color: var(--dark-light);
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+        }
+        
+        .no-results i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--gray);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: 80px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .footer-column a {
+            color: #dfe6e9;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-column a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+        
+        .social-icons a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #b2bec3;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav ul {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .page-header {
+                padding: 60px 0 40px;
+            }
+            
+            .page-header h1 {
+                font-size: 36px;
+            }
+            
+            .filter-group {
+                min-width: 100%;
+            }
+            
+            .sort-options {
+                justify-content: flex-start;
+            }
+            
+            .doctor-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .doctor-actions .btn {
+                width: 100%;
+            }
+            
+            .doctors-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>MedConnect</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="/home">Home</a></li>
+                        <li><a href='/bookings'>Bookings</a></li>
+                        <li><a href="#" class="active">Doctors</a></li>
+                        <li><a href="#">Specialties</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">About Us</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Our Medical Team</h1>
+            <p>Find and book appointments with our highly qualified healthcare professionals</p>
+            <ul class="breadcrumb">
+                <li><a href="/home">Home</a></li>
+                <li><i class="fas fa-chevron-right"></i></li>
+                <li>Doctors</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Sort Options -->
+    <section class="container">
+        <div class="sort-options">
+            <select class="sort-select" id="sortBy">
+                <option value="name">Sort by Name</option>
+                <option value="rating">Sort by Rating</option>
+                <option value="specialty">Sort by Specialty</option>
+            </select>
+        </div>
+        
+        <!-- Filters Section -->
+        <div class="filters">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label for="specialty"><i class="fas fa-stethoscope"></i> Specialty</label>
+                    <select id="specialty">
+                        <option value="">All Specialties</option>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Dermatology">Dermatology</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="Neurology">Neurology</option>
+                        <option value="Orthopedics">Orthopedics</option>
+                        <option value="Gastroenterology">Gastroenterology</option>
+                        <option value="Ophthalmology">Ophthalmology</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="availability"><i class="fas fa-calendar-alt"></i> Availability</label>
+                    <input type="date" id="availability"/>
+                </div>
+                <div class="filter-group">
+                    <label for="search"><i class="fas fa-search"></i> Search Doctor</label>
+                    <input type="text" id="search" placeholder="Doctor's name...">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Doctors Grid -->
+    <div class="container">
+        <div id="doctorsContainer" class="doctors-grid"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>MedConnect</h3>
+                    <p>Making healthcare accessible and convenient for everyone through technology.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Find a Doctor</a></li>
+                        <li><a href="#">Specialties</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Specialties</h3>
+                    <ul>
+                        <li><a href="#">Cardiology</a></li>
+                        <li><a href="#">Dermatology</a></li>
+                        <li><a href="#">Pediatrics</a></li>
+                        <li><a href="#">Neurology</a></li>
+                        <li><a href="#">Orthopedics</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Health Ave, Medical Center</li>
+                        <li><i class="fas fa-phone"></i> (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@medconnect.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 MedConnect. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Set minimum date for calendar
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("availability").setAttribute("min", today);
+
+        // Doctor database
+        const doctors = [
+            {
+                name: "Dr. Sarah Johnson",
+                specialty: "Cardiology",
+                workingHours: {
+                    Monday: ["2:00 PM", "4:00 PM"],
+                    Tuesday: ["2:00 PM", "5:00 PM"],
+                    Wednesday: ["2:00 PM", "5:00 PM"],
+                    Thursday: ["2:00 PM", "5:00 PM"],
+                    Friday: ["2:00 PM", "4:00 PM"]
+                },
+                rating: 4.5,
+                reviews: 128,
+                availability: "Available Today"
+            },
+            {
+                name: "Dr. Siva Shankar",
+                specialty: "Cardiology",
+                workingHours: {
+                    Monday: ["9:00 AM", "12:00 PM"],
+                    Thursday: ["9:00 AM", "12:00 PM"],
+                    Friday: ["10:00 AM", "12:00 PM"]
+                },
+                rating: 4.4,
+                reviews: 149,
+                availability: "Available Today"
+            },
+            {
+                name: "Dr. Michael Chen",
+                specialty: "Pediatrics",
+                workingHours: {
+                    Monday: ["2:00 PM", "4:00 PM"],
+                    Tuesday: ["2:00 PM", "4:00 PM"],
+                    Wednesday: ["2:00 PM", "6:00 PM"],
+                    Thursday: ["2:00 PM", "4:00 PM"],
+                    Saturday: ["2:00 PM", "1:00 PM"]
+                },
+                rating: 4.9,
+                reviews: 204,
+                availability: "Limited Availability"
+            },
+            {
+                name: "Dr. Emily Rodriguez",
+                specialty: "Dermatology",
+                workingHours: {
+                    Monday: ["3:00 PM", "5:00 PM"],
+                    Tuesday: ["3:00 PM", "5:00 PM"],
+                    Wednesday: ["3:00 PM", "5:00 PM"],
+                    Friday: ["3:00 PM", "5:00 PM"]
+                },
+                rating: 4.7,
+                reviews: 93,
+                availability: "Available Today"
+            },
+            {
+                name: "Dr. James Wilson",
+                specialty: "Neurology",
+                workingHours: {
+                    Tuesday: ["10:00 AM", "12:00 PM"],
+                    Wednesday: ["10:00 AM", "12:00 PM"],
+                    Thursday: ["10:00 AM", "12:00 PM"],
+                    Friday: ["9:00 AM", "12:00 PM"]
+                },
+                rating: 4.8,
+                reviews: 167,
+                availability: "Limited Availability"
+            },
+            {
+                name: "Dr. Lisa Thompson",
+                specialty: "Orthopedics",
+                workingHours: {
+                    Monday: ["8:00 AM", "11:00 PM"],
+                    Tuesday: ["8:00 AM", "11:00 PM"],
+                    Thursday: ["8:00 AM", "11:00 PM"],
+                    Friday: ["8:00 AM", "11:00 PM"]
+                },
+                rating: 4.6,
+                reviews: 112,
+                availability: "Available Today"
+            },
+            {
+                name: "Dr. Robert Kim",
+                specialty: "Gastroenterology",
+                workingHours: {
+                    Monday: ["9:00 AM", "12:00 PM"],
+                    Tuesday: ["9:00 AM", "12:00 PM"],
+                    Wednesday: ["9:00 AM", "12:00 PM"],
+                    Thursday: ["9:00 AM", "12:00 PM"]
+                },
+                rating: 4.5,
+                reviews: 78,
+                availability: "Available Today"
+            },
+            {
+                name: "Dr. Amanda Patel",
+                specialty: "Ophthalmology",
+                workingHours: {
+                    Monday: ["9:00 AM", "12:00 PM"],
+                    Wednesday: ["9:00 AM", "12:00 PM"],
+                    Thursday: ["9:00 AM", "12:00 PM"],
+                    Friday: ["9:00 AM", "12:00 PM"]
+                },
+                rating: 4.9,
+                reviews: 145,
+                availability: "Limited Availability"
+            }
+        ];
+        
+
+        // Render doctor cards
+        function renderDoctors(list) {
+            const container = document.getElementById("doctorsContainer");
+            container.innerHTML = "";
+
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <h3>No doctors match your search criteria</h3>
+                        <p>Try adjusting your filters or search terms</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.forEach(doc => {
+                let hoursHTML = "";
+                for (let day in doc.workingHours) {
+                    hoursHTML += `
+                        <li>
+                            <span class="day">${day}</span>
+                            <span class="time">${doc.workingHours[day][0]} - ${doc.workingHours[day][1]}</span>
+                        </li>
+                    `;
+                }
+
+                // Determine status class based on availability
+                const statusClass = doc.availability.includes("Available") ? "status-available" : "status-limited";
+
+                container.innerHTML += `
+                    <div class="doctor-card">
+                        <div class="doctor-img">
+                            <i class="fas fa-user-md"></i>
+                            <span class="availability-status ${statusClass}">${doc.availability}</span>
+                        </div>
+                        <div class="doctor-info">
+                            <h3>${doc.name}</h3>
+                            <p class="doctor-specialty"><i class="fas fa-stethoscope"></i> ${doc.specialty}</p>
+                            <div class="doctor-rating">
+                                <i class="fas fa-star"></i> ${doc.rating} <span style="color: var(--dark-light); font-weight: normal;">(${doc.reviews} reviews)</span>
+                            </div>
+
+                            <div class="working-hours">
+                                <h4><i class="far fa-clock"></i> Working Hours:</h4>
+                                <ul class="hours-list">${hoursHTML}</ul>
+                            </div>
+
+                            <div class="doctor-actions">
+                                <button class="btn btn-outline btn-small"><i class="far fa-user"></i> Profile</button>
+                                <button class="btn btn-primary btn-small" data-doctor="${doc.name}"><i class="far fa-calendar-check"></i> Book</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Add event listeners to buttons after rendering
+            addButtonListeners();
+        }
+        document.querySelectorAll('.btn-primary').forEach(button => {
+            button.addEventListener('click', function () {
+                const doctorName = this.getAttribute("data-doctor");
+                window.location.href = `/booking?doctor=${encodeURIComponent(doctorName)}`;
+            });
+        });
+
+
+        function addButtonListeners() {
+            document.querySelectorAll('.btn-primary').forEach(button => {
+                button.addEventListener('click', function () {
+                    const doctorName = this.getAttribute("data-doctor");
+                    window.location.href = `/booking?doctor=${encodeURIComponent(doctorName)}`;
+                });
+            });
+        }
+
+
+
+        // Filter doctors
+        function filterDoctors() {
+            const specialty = document.getElementById("specialty").value;
+            const date = document.getElementById("availability").value;
+            const search = document.getElementById("search").value.toLowerCase();
+            const sortBy = document.getElementById("sortBy").value;
+
+            const day = date ?
+                ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][new Date(date).getDay()]
+                : null;
+
+            let filtered = doctors.filter(doc => {
+                // Filter by specialty
+                if (specialty && doc.specialty !== specialty) return false;
+                
+                // Filter by search term
+                if (search && !doc.name.toLowerCase().includes(search)) return false;
+                
+                // Filter by availability on selected day
+                if (day && !doc.workingHours[day]) return false;
+                
+                return true;
+            });
+
+            // Sort results
+            filtered.sort((a, b) => {
+                switch(sortBy) {
+                    case 'name':
+                        return a.name.localeCompare(b.name);
+                    case 'rating':
+                        return b.rating - a.rating;
+                    case 'specialty':
+                        return a.specialty.localeCompare(b.specialty);
+                    default:
+                        return 0;
+                }
+            });
+
+            renderDoctors(filtered);
+        }
+
+        // Event listeners for filters
+        document.getElementById("specialty").addEventListener("change", filterDoctors);
+        document.getElementById("availability").addEventListener("change", filterDoctors);
+        document.getElementById("search").addEventListener("keyup", filterDoctors);
+        document.getElementById("sortBy").addEventListener("change", filterDoctors);
+
+        // Initial render
+        renderDoctors(doctors);
+    });
+    </script>
+</body>
+</html>

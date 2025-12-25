@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <title>My Appointments | MedConnect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #f7f9fc;
+            color: #222;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 30px 15px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2a4a9c;
+            margin-bottom: 25px;
+        }
+
+        /* Booking Card */
+
+        .booking-card {
+            background: #fff;
+            border: 1px solid #e5e8ee;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .doctor-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2a4a9c;
+        }
+
+        .doctor-specialty {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .appointment-info {
+            font-size: 14px;
+            margin: 6px 0;
+        }
+
+        .reason {
+            background: #f1f4fa;
+            border-left: 3px solid #2a4a9c;
+            padding: 8px 10px;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .status-confirmed {
+            background: #e7f5ed;
+            color: #0d6b3d;
+        }
+
+        .status-pending {
+            background: #fff4e2;
+            color: #ae6b00;
+        }
+
+        .status-canceled {
+            background: #fdeaea;
+            color: #b32222;
+        }
+
+        /* Action Buttons */
+
+        .card-footer {
+            margin-top: 12px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            border: 1px solid #ccc;
+            background: #fff;
+            padding: 6px 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            border-color: #2a4a9c;
+            color: #2a4a9c;
+        }
+
+        .btn-danger {
+            border-color: #b32222;
+            color: #b32222;
+        }
+
+        .btn-danger:hover {
+            background: #fdeaea;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <h1 class="page-title">My Appointments</h1>
+
+        <% if (!appointments || appointments.length === 0) { %>
+            <p>No appointments found.</p>
+        <% } %>
+
+        <% appointments.forEach(app => { %>
+
+        <div class="booking-card">
+
+            <div class="card-header">
+                <div>
+                    <div class="doctor-name"><%= app.doctor %></div>
+                    <div class="doctor-specialty"><%= app.specialty %></div>
+                </div>
+
+                <span class="status-badge status-<%= app.status %>">
+                    <%= app.status %>
+                </span>
+            </div>
+
+            <div class="appointment-info">
+                <strong>Date:</strong> <%= app.date %>
+            </div>
+
+            <div class="appointment-info">
+                <strong>Time:</strong> <%= app.time %>
+            </div>
+
+            <% if (app.reason) { %>
+            <div class="reason"><%= app.reason %></div>
+            <% } %>
+
+            <div class="card-footer">
+                <% { %>
+                <form method="POST" action="/appointments/<%= app._id %>/cancel">
+                    <button class="btn btn-danger">Cancel</button>
+                </form>
+                <% } %>
+            </div>
+
+        </div>
+
+        <% }) %>
+
+    </div>
+
+
+
+    <script>
+        // Database Configuration - This should match your booking system
+        const DB_NAME = 'medconnect_appointments';
+        
+        // Sample appointment data (for demo purposes)
+        // In production, this would come from localStorage or a backend
+        document.querySelectorAll(".filter-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const filter = btn.dataset.filter;
+                document.querySelectorAll(".booking-card").forEach(card => {
+                card.style.display =
+                    filter === "all" || card.dataset.status === filter
+                    ? "block"
+                    : "none";
+                });
+            });
+        });
+
+        
+        // Get appointments from localStorage or use sample data
+        function getAppointments() {
+            try {
+                const storedAppointments = localStorage.getItem(DB_NAME);
+                if (storedAppointments) {
+                    const appointments = JSON.parse(storedAppointments);
+                    if (Array.isArray(appointments) && appointments.length > 0) {
+                        return appointments;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading appointments:', error);
+            }
+            
+            // Return sample data if no stored appointments
+            return sampleAppointments;
+        }
+        
+        // Update appointment status
+        function updateAppointmentStatus(id, status) {
+            let appointments = getAppointments();
+            const index = appointments.findIndex(app => app.id === id);
+            if (index !== -1) {
+                appointments[index].status = status;
+                
+                // Save to localStorage (only if using real storage)
+                try {
+                    localStorage.setItem(DB_NAME, JSON.stringify(appointments));
+                } catch (error) {
+                    console.error('Error saving appointments:', error);
+                }
+                
+                return true;
+            }
+            return false;
+        }
+        
+        // Format date for display
+        function formatDisplayDate(dateString) {
+            try {
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) {
+                    return dateString;
+                }
+                return date.toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+            } catch (error) {
+                return dateString;
+            }
+        }
+        
+        // Get status badge class
+        function getStatusClass(status) {
+            switch(status?.toLowerCase()) {
+                case 'confirmed': return 'status-confirmed';
+                case 'pending': return 'status-pending';
+                case 'completed': return 'status-completed';
+                case 'canceled':
+                case 'cancelled': return 'status-canceled';
+                default: return 'status-pending';
+            }
+        }
+        
+        // Format status text
+        function formatStatusText(status) {
+            if (!status) return 'Pending';
+            return status.charAt(0).toUpperCase() + status.slice(1);
+        }
+        
+        // Load and display bookings
+        function loadBookings(filter = 'all') {
+            const appointments = getAppointments();
+            const bookingsContainer = document.getElementById('bookingsContainer');
+            const emptyState = document.getElementById('emptyState');
+            
+            // Clear container
+            bookingsContainer.innerHTML = '';
+            
+            // Filter appointments
+            let filteredAppointments = appointments;
+            if (filter !== 'all') {
+                filteredAppointments = appointments.filter(app => 
+                    app.status?.toLowerCase() === filter.toLowerCase()
+                );
+            }
+            
+            // Show empty state if no appointments
+            if (filteredAppointments.length === 0) {
+                bookingsContainer.appendChild(emptyState);
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            // Hide empty state
+            emptyState.style.display = 'none';
+            
+            // Sort appointments by date (soonest first)
+            filteredAppointments.sort((a, b) => {
+                try {
+                    const dateA = new Date(a.rawDate || a.date || a.createdAt);
+                    const dateB = new Date(b.rawDate || b.date || b.createdAt);
+                    return dateA - dateB;
+                } catch (error) {
+                    return 0;
+                }
+            });
+            
+            // Create booking cards
+            filteredAppointments.forEach(appointment => {
+                const bookingCard = createBookingCard(appointment);
+                bookingsContainer.appendChild(bookingCard);
+            });
+        }
+        
+        // Create booking card
+        function createBookingCard(appointment) {
+            const card = document.createElement('div');
+            card.className = 'booking-card';
+            card.dataset.id = appointment.id;
+            
+            // Format dates
+            const displayDate = formatDisplayDate(appointment.date || appointment.rawDate);
+            const displayTime = appointment.time || 'Not specified';
+            
+            // Status
+            const statusClass = getStatusClass(appointment.status);
+            const statusText = formatStatusText(appointment.status);
+            
+            // Create card HTML
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="token-badge">${appointment.token || 'MC-0000'}</div>
+                    <div class="status-badge ${statusClass}">${statusText}</div>
+                </div>
+                
+                <div class="card-content">
+                    <div class="info-row">
+                        <div class="info-label">Doctor:</div>
+                        <div class="info-value">
+                            <div class="doctor-name">${appointment.doctor || 'Not specified'}</div>
+                            <div class="doctor-specialty">${appointment.doctorSpecialty || 'General Medicine'}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-label">Appointment:</div>
+                        <div class="info-value">
+                            <div class="appointment-time">${displayTime}</div>
+                            <div class="appointment-date">${displayDate}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-label">Patient:</div>
+                        <div class="info-value">
+                            <div class="patient-name">${appointment.patientName || 'Not specified'}</div>
+                            <div class="patient-contact">
+                                ${appointment.patientPhone || ''} 
+                                ${appointment.patientEmail ? '<br>' + appointment.patientEmail : ''}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-label">Reason:</div>
+                        <div class="info-value">
+                            <div class="appointment-reason">${appointment.reason || 'Not specified'}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-footer">
+                    <div class="date-badge">
+                        <i class="far fa-calendar"></i> ${displayDate}
+                    </div>
+                    <div class="action-buttons">
+                        ${(appointment.status === 'confirmed' || appointment.status === 'pending') ? `
+                        <button class="action-btn cancel-btn" onclick="cancelAppointment('${appointment.id}')">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        ` : ''}
+                        
+                        ${appointment.status === 'canceled' || appointment.status === 'cancelled' ? `
+                        <button class="action-btn reschedule-btn" onclick="rescheduleAppointment('${appointment.id}')">
+                            <i class="fas fa-redo"></i> Reschedule
+                        </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        // Cancel appointment
+        function cancelAppointment(id) {
+            if (confirm("Are you sure you want to cancel this appointment? This action cannot be undone.")) {
+                if (updateAppointmentStatus(id, 'canceled')) {
+                    loadBookings(getCurrentFilter());
+                    showNotification("Appointment canceled successfully.", "success");
+                }
+            }
+        }
+        
+        // Reschedule appointment
+        function rescheduleAppointment(id) {
+            // In a real app, this would redirect to booking page with pre-filled data
+            showNotification("Redirecting to booking page to reschedule...", "info");
+            // window.location.href = `booking.html?reschedule=${id}`;
+        }
+        
+        // Show notification
+        function showNotification(message, type) {
+            // Remove any existing notification
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            
+            // Set icon based on type
+            let icon = 'info-circle';
+            let bgColor = '#3a6bc7';
+            let color = 'white';
+            
+            if (type === 'success') {
+                icon = 'check-circle';
+                bgColor = '#0a6b3c';
+            } else if (type === 'error') {
+                icon = 'exclamation-circle';
+                bgColor = '#c53030';
+            }
+            
+            notification.innerHTML = `
+                <i class="fas fa-${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            // Style the notification
+            notification.style.cssText = `
+                position: fixed;
+                top: 30px;
+                right: 30px;
+                padding: 18px 24px;
+                border-radius: 12px;
+                color: ${color};
+                background-color: ${bgColor};
+                z-index: 1000;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-weight: 500;
+                animation: slideIn 0.4s ease-out;
+                max-width: 400px;
+            `;
+            
+            // Add animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(notification);
+            
+            // Remove notification after 4 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.4s ease-out';
+                setTimeout(() => notification.remove(), 400);
+            }, 4000);
+        }
+        
+        // Get current active filter
+        function getCurrentFilter() {
+            const activeFilter = document.querySelector('.filter-btn.active');
+            return activeFilter ? activeFilter.dataset.filter : 'all';
+        }
+        
+        // Initialize the page
+        function initPage() {
+            // Load appointments
+            loadBookings();
+            
+            // Set up filter buttons
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    
+                    // Load appointments with filter
+                    const filter = button.dataset.filter;
+                    loadBookings(filter);
+                });
+            });
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initPage);
+        
+        // Make functions globally available
+        window.cancelAppointment = cancelAppointment;
+        window.rescheduleAppointment = rescheduleAppointment;
+    </script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        
+        if (params.get("canceled") === "true") {
+            alert("Appointment cancelled successfully.");
+        }
+        if (params.get("canceled") === "false") {
+            alert("Failed to cancel appointment.");
+        }
+    </script>
+    <script>
+        window.addEventListener("pageshow", function (event) {
+            if (event.persisted) {
+                location.reload();
+            }
+        });
+    </script>
+
+
+</body>
+</html>
