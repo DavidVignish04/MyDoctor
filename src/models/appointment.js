@@ -1,5 +1,4 @@
 const { mongoose } = require("../config");
-
 const appointmentSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -16,7 +15,12 @@ const appointmentSchema = new mongoose.Schema({
   time: {
     type: String,
     required: true
+  },
+  status: {
+    type: String,
+    default: "confirmed"
   }
+
 });
 
 module.exports = mongoose.model('Appointment', appointmentSchema);

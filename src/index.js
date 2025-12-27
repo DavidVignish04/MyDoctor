@@ -1,14 +1,17 @@
-const express=require("express");
-const path=require("path");
-const bcrypt=require("bcrypt");
+require("dotenv").config(); // must be first
 
+const express = require("express");
+const path = require("path");
+const bcrypt = require("bcrypt");
+const session = require("express-session");
 
-const { mongoose, User } = require("./config");
+// DB connection (runs once)
+require("./config");
+
+const User = require("./models/user");
 const Appointment = require("./models/appointment");
 
-const app=express();
-
-const session = require("express-session");
+const app = express();
 
 app.use(session({
   secret: "secret",
